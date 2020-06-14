@@ -5,7 +5,10 @@ const  {
     getAllPlaces, 
     postOnePlace,
     getPlace,
-    commentOnPlace
+    commentOnPlace,
+    likePlace,
+    unlikePlace,
+    deletePlace
 } = require('./handlers/places');
 const { 
     signup, 
@@ -28,10 +31,9 @@ app.get('/places', getAllPlaces);
 app.post('/place', FBAuth, postOnePlace);
 app.get('/place/:placeId', getPlace);
 
-
-//todo route
-// delete place
-// like place
+app.delete('/place/:placeId', FBAuth, deletePlace);
+app.get('/place/:placeId/like', FBAuth, likePlace);
+app.get('/place/:placeId/unlike', FBAuth, unlikePlace);
 app.post('/place/:placeId/comment', FBAuth, commentOnPlace)
 
 
