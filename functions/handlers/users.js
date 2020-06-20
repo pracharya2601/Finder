@@ -18,6 +18,9 @@ exports.signup = (req, res) => {
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
     handle: req.body.handle,
+    fullName: req.body.fullName,
+    age: req.body.age,
+    contactNo: req.body.contactNo,
   };
 
   //validate entered email and password
@@ -50,6 +53,9 @@ exports.signup = (req, res) => {
       const userCredintials = {
         handle: newUser.handle,
         email: newUser.email,
+        fullName: newUser.fullName,
+        age: newUser.age,
+        contactNo: newUser.contactNo,
         createdAt: new Date().toISOString(),
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
         userId,
@@ -64,7 +70,9 @@ exports.signup = (req, res) => {
       if (err.code === 'auth/email-already-in-use') {
         return res.status(400).json({ email: 'Email already in use' });
       } else {
-        return res.status(500).json({ error: err.code });
+        return res
+          .status(500)
+          .json({ general: 'something went wrong, please tye again' });
       }
     });
 };
@@ -91,6 +99,8 @@ exports.login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
+      //auth/wrong password
+      //auth user not found
       if (err.code === 'auth/wrong-password')
         return res.status(403).json({ general: 'Wrond credentials' });
       if (err.code === 'auth/user-not-found')
