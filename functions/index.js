@@ -6,8 +6,11 @@ const { db } = require('./util/admin');
 const {
   getAllPlaces,
   postOnePlace,
+  uploadPlaceImage,
   getPlace,
   commentOnPlace,
+  getOneComment,
+  // updateComment,
   likePlace,
   unlikePlace,
   deletePlace,
@@ -15,6 +18,7 @@ const {
 const {
   signup,
   login,
+  resetPassword,
   uploadImage,
   addUserDetails,
   getAuthenticatedUser,
@@ -25,21 +29,27 @@ const FBAuth = require('./util/fbAuth');
 
 //express
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 
 // places routes
 app.get('/places', getAllPlaces);
 app.post('/place', FBAuth, postOnePlace);
+app.post('/place/:placeId', FBAuth, uploadPlaceImage);
 app.get('/place/:placeId', getPlace);
 
 app.delete('/place/:placeId', FBAuth, deletePlace);
 app.get('/place/:placeId/like', FBAuth, likePlace);
 app.get('/place/:placeId/unlike', FBAuth, unlikePlace);
 app.post('/place/:placeId/comment', FBAuth, commentOnPlace);
+app.get('/place/:placeId/comment/:commentId', FBAuth, getOneComment);
+// app.post('/place/:placeId/comment/:commentId', FBAuth, updateComment);
 
 //user routes
 app.post('/signup', signup);
 app.post('/login', login);
+app.post('/resetpassword', resetPassword);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);

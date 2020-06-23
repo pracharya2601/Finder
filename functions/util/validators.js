@@ -65,6 +65,15 @@ exports.validateLoginData = (data) => {
   };
 };
 
+exports.validateResetPasswordUser = (data) => {
+  let errors = {};
+  if (isEmpty(data.email)) errors.email = 'Must not be empty';
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
 exports.reduceUserDetails = (data) => {
   let userDetails = {};
 
