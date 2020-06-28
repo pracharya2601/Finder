@@ -22,6 +22,7 @@ const {
   uploadImage,
   addUserDetails,
   getAuthenticatedUser,
+  getUserDetails,
 } = require('./handlers/users');
 
 //import firebae auth
@@ -53,6 +54,7 @@ app.post('/resetpassword', resetPassword);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
+app.get('/user/:handle', FBAuth, getUserDetails);
 
 //https://baseurl.com/api
 exports.api = functions.https.onRequest(app);
