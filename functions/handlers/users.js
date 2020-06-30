@@ -127,39 +127,42 @@ exports.addUserDetails = (req, res) => {
 //get other user data
 exports.getUserDetails = (req, res) => {
   let userData = {};
-  db.doc(`/user/${req.params.handle}`)
+  db.doc(`/users/${req.params.handle}`)
     .get()
     .then((doc) => {
       if (doc.exists) {
         userData.user = doc.data();
         return db
           .collection('places')
-          .where('userHandle', '==', req.params.handle);
-        orderBy('createdAt', 'desc').get();
+          .where('userHandle', '==', req.params.handle)
+          .orderBy('createdAt', 'desc')
+          .get();
       } else {
         return res.status(404).json({ error: 'user not found' });
       }
     })
     .then((data) => {
       userData.places = [];
-      data.forEach((doc) => {
-        userData.places.push({
-          placeId: doc.id,
-          body: doc.data().body,
-          description: doc.data().description,
-          address: doc.data().address,
-          contactNo: doc.data().contactNo,
-          priceRange: doc.data().priceRange,
-          userHandle: doc.data().userHandle,
-          userImage: doc.data().userImage,
-          placeImgUrl: doc.data().placeImgUrl,
-          createdAt: doc.data().createdAt,
-          likeCount: doc.data().likeCount,
-          commentCount: doc.data().commentCount,
-          viewCount: doc.data().viewCount,
+      if (data) {
+        data.forEach((doc) => {
+          userData.places.push({
+            placeId: doc.id,
+            body: doc.data().body,
+            description: doc.data().description,
+            address: doc.data().address,
+            contactNo: doc.data().contactNo,
+            priceRange: doc.data().priceRange,
+            userHandle: doc.data().userHandle,
+            userImage: doc.data().userImage,
+            placeImgUrl: doc.data().placeImgUrl,
+            createdAt: doc.data().createdAt,
+            likeCount: doc.data().likeCount,
+            commentCount: doc.data().commentCount,
+            viewCount: doc.data().viewCount,
+          });
         });
-      });
-      return res.json(userData);
+        return res.json(userData);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -289,6 +292,23 @@ exports.resetPassword = (req, res) => {
       //auth user not found
       if (err.code === 'auth/user-not-found')
         return res.status(404).json({ general: 'No user found' });
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.markNotificationsRead = (req, res) => {
+  let batch = db.batch();
+  req.body.forEach((notificationId) => {
+    const notification = db.doc(`/notifications/${notificationId}`);
+    batch.update(notification, { read: true });
+  });
+  batch
+    .commit()
+    .then()(() => {
+      return res.json({ message: 'notifications marked read' });
+    })
+    .catch((err) => {
+      console.log(err);
       return res.status(500).json({ error: err.code });
     });
 };

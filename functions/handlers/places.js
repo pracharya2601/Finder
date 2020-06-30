@@ -1,5 +1,6 @@
 const { db } = require('../util/admin');
 const config = require('../util/config');
+const admin = require('../util/admin');
 
 exports.getAllPlaces = (req, res) => {
   db.collection('places')
@@ -65,21 +66,30 @@ exports.postOnePlace = (req, res) => {
 
 //upload house and room image seperately
 exports.uploadPlaceImage = (req, res) => {
-  const BusBoy = require('busboy');
-  const path = require('path');
-  const os = require('os');
-  const fs = require('fs');
+  const busboy = new Busboy({
+    headers: req.headers,
+    limits: {
+      // Cloud functions impose this restriction
+      fileSize: 10 * 1024 * 1024,
+    },
+  });
+  const fields = {};
+  const files = [];
+  const fileWrites = [];
 
-  const busboy = new BusBoy({ headers: req.headers });
+  // Note: os.tmpdir() points to an in-memory file system on GCF
+  // Thus, any files in it must fit in the instance's memory.
+  const tmpdir = os.tmpdir();
 
-  let imageFileName;
-  let imageToBEUploaded;
+  busboy.on('field', (key, value) => {
+    fields[key] = value;
+  });
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    //changed
     if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
       return res.status(400).json({ error: 'Wrong file submitted' });
     }
-
     const imageExtention = filename.split('.')[filename.split('.').length - 1];
 
     imageFileName = `${Math.round(
@@ -87,37 +97,76 @@ exports.uploadPlaceImage = (req, res) => {
     )}.${imageExtention}`;
     const filepath = path.join(os.tmpdir(), imageFileName);
 
-    imageToBEUploaded = { filepath, mimetype };
-    file.pipe(fs.createWriteStream(filepath));
+    const writeStream = fs.createWriteStream(filepath);
+    file.pipe(writeStream);
+
+    fileWrites.push(
+      new Promise((resolve, reject) => {
+        file.on('end', () => writeStream.end());
+        writeStream.on('finish', () => {
+          const size = Buffer.byteLength(buffer);
+          if (err) {
+            return reject(err);
+          }
+          files.push({
+            originalname: imageFileName,
+            mimetype,
+            buffer,
+            size,
+          });
+          try {
+            fs.unlinkSync(filepath);
+          } catch (error) {
+            return reject(error);
+          }
+          resolve();
+        });
+      })
+    );
+    writeStream.on('error', reject);
   });
+
   busboy.on('finish', () => {
-    admin
-      .storage()
-      .bucket()
-      .upload(imageToBEUploaded.filepath, {
-        resumable: false,
-        metadata: {
+    Promise.all(fileWrites);
+
+    files.forEach((image) => {
+      uploadPlaceImage(image);
+    });
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+    // Create a child reference
+    var imagesRef = storageRef.child('imagesPlace');
+    // imagesRef now points to 'images'
+
+    function uploadPlaceImage(imageFile) {
+      imagesRef
+        .put(imageFile.filepath, {
+          resumable: false,
           metadata: {
-            contentType: imageToBEUploaded.mimetype,
+            metadata: {
+              contentType: imageFile.mimetype,
+            },
           },
-        },
-      })
-      .then(() => {
-        if (doc.data().userHandle !== req.user.handle) {
-          return res.status(403).json({ error: 'unauthorized' });
-        } else {
-          const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-          return db.doc(`/places/${req.user.handle}`).update({ imageUrl });
-        }
-      })
-      .then(() => {
-        return res.json({ message: 'Image uploaded successfully' });
-      })
-      .catch((err) => {
-        console.error(err);
-        return res.status(500).json({ error: err.code });
-      });
+        })
+        .then(() => {
+          const img = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+          return db
+            .doc(`/places/${req.params.placeId}/placeImgUrl/`)
+            .update(img);
+        })
+        .then(() => {
+          return res.json({ message: 'Image uploaded successfully' });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json({ error: err.code });
+        });
+    }
   });
+
   busboy.end(req.rawBody);
 };
 

@@ -23,6 +23,7 @@ const {
   addUserDetails,
   getAuthenticatedUser,
   getUserDetails,
+  markNotificationsRead,
 } = require('./handlers/users');
 
 //import firebae auth
@@ -37,7 +38,7 @@ app.use(cors());
 // places routes
 app.get('/places', getAllPlaces);
 app.post('/place', FBAuth, postOnePlace);
-app.post('/place/:placeId', FBAuth, uploadPlaceImage);
+app.post('/place/:placeId/image', FBAuth, uploadPlaceImage);
 app.get('/place/:placeId', getPlace);
 
 app.delete('/place/:placeId', FBAuth, deletePlace);
@@ -54,7 +55,8 @@ app.post('/resetpassword', resetPassword);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-app.get('/user/:handle', FBAuth, getUserDetails);
+app.get('/user/:handle', getUserDetails);
+app.post('/notifications', FBAuth, markNotificationsRead);
 
 //https://baseurl.com/api
 exports.api = functions.https.onRequest(app);
