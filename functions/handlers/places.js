@@ -54,7 +54,7 @@ exports.postOnePlace = (req, res) => {
   db.collection('places')
     .add(newPlace)
     .then((doc) => {
-      const resPlace = newPlace;
+      let resPlace = newPlace;
       resPlace.placeId = doc.id;
       res.json(resPlace);
     })
@@ -234,7 +234,7 @@ exports.commentOnPlace = (req, res) => {
       db.collection('comments')
         .add(newComment)
         .then((doc) => {
-          const resComment = newComment;
+          let resComment = newComment;
           resComment.commentId = doc.id;
           res.json(resComment);
         });
