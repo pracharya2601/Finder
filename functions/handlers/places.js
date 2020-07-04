@@ -38,6 +38,7 @@ exports.postOnePlace = (req, res) => {
 
   const newPlace = {
     body: req.body.body,
+    catagory: req.body.catagory,
     description: req.body.description,
     address: req.body.address,
     contactNo: req.body.contactNo,
@@ -439,6 +440,89 @@ exports.deletePlace = (req, res) => {
     });
 };
 
-exports.deleteComment = (req, res) => {
-  const document = db.doc(`/comments/${req.params.id}`);
+// exports.deleteComment = (req, res) => {
+//   const document = db.doc(`/comments/${req.params.id}`);
+// };
+
+//saved place
+exports.savePlace = (req, res) => {
+  const savedDocument = db
+    .collection('saved')
+    .where('userHandle', '==', 'req.user.handle')
+    .where('placeId', '==', req.params.placeId)
+    .limit(1);
+
+  const placeDocument = db.doc(`places/${req.params.placeId}`);
+  let placeData = {};
+
+  placeDocument
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        placeData = doc.data();
+        placeData.placeId = doc.id;
+        return savedDocument.get();
+      } else {
+        return res.status(404).json({ error: 'Not found ' });
+      }
+    })
+    .then((data) => {
+      if (data.empty) {
+        return db
+          .collection('saved')
+          .add({
+            placeId: req.params.placeId,
+            userHandle: req.params.handle,
+          })
+          .then(() => {
+            return res.json(placeData);
+          });
+      } else {
+        return res.status(400).json({ error: 'place already saved' });
+      }
+    })
+    .catch((err) => {
+      console.log((err) => {
+        res.status(500).json({ error: err.code });
+      });
+    });
+};
+
+exports.unSavePlace = (req, res) => {
+  const savedDocument = db
+    .collection('saved')
+    .where('userHandle', '==', req.user.handle)
+    .where('placeId', '==', req.params.placeId)
+    .limit(1);
+
+  const placeDocument = db.doc(`/places/${req.params.placeId}`);
+
+  let placeData = {};
+
+  placeDocument
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        placeData = doc.data();
+        placeData.placeId = doc.id;
+        return savedDocument.get();
+      } else {
+        return res.status(400).json({ error: 'Place not sfound' });
+      }
+    })
+    .then((data) => {
+      if (data.empty) {
+        return res.status(400).json({ error: 'place not saved by you' });
+      } else {
+        return db
+          .doc(`/saved/${data.docs[0].id}`)
+          .delete()
+          .then(() => {
+            res.json(placeData);
+          });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.code });
+    });
 };
