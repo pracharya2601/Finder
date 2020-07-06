@@ -16,6 +16,7 @@ const {
   deletePlace,
   unSavePlace,
   savePlace,
+  reportOnPlace,
 } = require('./handlers/places');
 const {
   signup,
@@ -51,6 +52,7 @@ app.get('/place/:placeId/comment/:commentId', FBAuth, getOneComment);
 // app.post('/place/:placeId/comment/:commentId', FBAuth, updateComment);
 app.get('/place/:placeId/save', FBAuth, savePlace);
 app.get('/place/:placeId/unsave', FBAuth, unSavePlace);
+app.post('/place/:placeId/report', FBAuth, reportOnPlace);
 
 //user routes
 app.post('/signup', signup);

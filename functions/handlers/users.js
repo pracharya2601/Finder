@@ -208,6 +208,16 @@ exports.getAuthenticatedUser = (req, res) => {
           notificationId: doc.id,
         });
       });
+      return db
+        .collection('saved')
+        .where('userHandle', '==', req.user.handle)
+        .get();
+    })
+    .then((data) => {
+      userData.saved = [];
+      data.forEach((doc) => {
+        userData.saved.push(doc.data());
+      });
       return res.json(userData);
     })
 

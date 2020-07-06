@@ -23,6 +23,7 @@ exports.getAllPlaces = (req, res) => {
           likeCount: doc.data().likeCount,
           commentCount: doc.data().commentCount,
           viewCount: doc.data().viewCount,
+          reportCount: doc.data().reportCount,
         });
       });
       return res.json(places);
@@ -50,6 +51,7 @@ exports.postOnePlace = (req, res) => {
     likeCount: 0,
     commentCount: 0,
     viewCount: 0,
+    reportCount: 0,
   };
 
   db.collection('places')
@@ -440,19 +442,20 @@ exports.deletePlace = (req, res) => {
     });
 };
 
-// exports.deleteComment = (req, res) => {
-//   const document = db.doc(`/comments/${req.params.id}`);
-// };
+exports.deleteComment = (req, res) => {
+  const document = db.doc(`/comments/${req.params.id}`);
+};
 
 //saved place
 exports.savePlace = (req, res) => {
-  const savedDocument = db
+  const saveDocument = db
     .collection('saved')
-    .where('userHandle', '==', 'req.user.handle')
+    .where('userHandle', '==', req.user.handle)
     .where('placeId', '==', req.params.placeId)
     .limit(1);
 
-  const placeDocument = db.doc(`places/${req.params.placeId}`);
+  const placeDocument = db.doc(`/places/${req.params.placeId}`);
+
   let placeData = {};
 
   placeDocument
@@ -461,9 +464,9 @@ exports.savePlace = (req, res) => {
       if (doc.exists) {
         placeData = doc.data();
         placeData.placeId = doc.id;
-        return savedDocument.get();
+        return saveDocument.get();
       } else {
-        return res.status(404).json({ error: 'Not found ' });
+        return res.status(404).json({ error: 'Place not found' });
       }
     })
     .then((data) => {
@@ -472,19 +475,18 @@ exports.savePlace = (req, res) => {
           .collection('saved')
           .add({
             placeId: req.params.placeId,
-            userHandle: req.params.handle,
+            userHandle: req.user.handle,
           })
           .then(() => {
             return res.json(placeData);
           });
       } else {
-        return res.status(400).json({ error: 'place already saved' });
+        return res.status(400).json({ error: 'Place already saved' });
       }
     })
     .catch((err) => {
-      console.log((err) => {
-        res.status(500).json({ error: err.code });
-      });
+      console.error(err);
+      res.status(500).json({ error: err.code });
     });
 };
 
@@ -524,5 +526,57 @@ exports.unSavePlace = (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: err.code });
+    });
+};
+
+exports.reportOnPlace = (req, res) => {
+  if (req.body.body.trim() === '')
+    return res.status(400).json({ report: 'must not be empty' });
+
+  const reportDocument = db
+    .collection('reports')
+    .where('userHandle', '==', req.user.handle)
+    .where('placeId', '==', req.params.placeId)
+    .limit(1);
+
+  const newReport = {
+    body: req.body.body,
+    type: req.body.type,
+    createdAt: new Date().toISOString(),
+    placeId: req.params.placeId,
+    userHandle: req.user.handle,
+  };
+  placeData = {};
+
+  db.doc(`/places/${req.params.placeId}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        placeData = doc.data();
+        placeData.placeId = doc.id;
+        return reportDocument.get();
+      } else {
+        return res.status(400).json({ error: 'not found' });
+      }
+    })
+    .then((data) => {
+      if (data.empty) {
+        return db
+          .collection('reports')
+          .add(newReport)
+          .then((doc) => {
+            let resComment = newComment;
+            return res.json(resComment);
+          })
+          .then(() => {
+            placeData.reportCount++;
+            return placeDocument.update({ reportCount: placeData.reportCount });
+          });
+      } else {
+        return res.status(400).json({ error: 'Already reported' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `Something went wrong ${err.code}` });
     });
 };
