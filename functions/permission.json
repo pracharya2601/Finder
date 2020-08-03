@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cocoontechlab",
+  "private_key_id": "b2285b2f600c507334d0549b73bf457b35d052d9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCj1SXA3O1pT1lA\nCc2QfwSMD3RZq1kPHbLDcsu5XHYilHhHwL4qisZ6FGPROZjr2iHq8vmZo9u6XISA\n0ycYDFOTfnpVEgQ5hEv3oteomF85jDW58LpKSVxK2RdtE1vroJOcI5FL45PIjV3o\nlf6j0snmaZOujLToj5lI7GazUcCXIOu2nNeJ4PnJBF9dCGpqJc9QpBkMkpte10F1\n/tXvKu0h7YsppzZ2RwslJtTxqgkS3k2ePsDHkhBIPsqMDZJrbYIPcrSOfNPpBG9d\nBMKdHI82+Iq2vBx7hXAW8EePeD3jnolNq1jURV+ZrDANZI4RyjUNT2bRv5RtE9QU\n8YWjK4vnAgMBAAECggEAFw3Ujl39rImFbMz/AnEqlyOfmEn+h3GC6RzwzQh/+TVn\nnZU3oq3nkws70UJ9IdyOqaH/p0lBuhObHl5YNyVDkihEl6RS4t3FK4zciGAfWkOV\ngIZUTfAieXKGE4vGA2i+Yho2hSAk+Mjn05Behk1lqt46xrUMdK4Bqxt/sjEesZqv\nLVXrNpFTYgonVEknBauX7ui4IsRaWO8b8iKtMHg/k8CdKufVuy5l2CY4NugVi/3L\nWGOjd9d2obWPROtNKib0ann6Eu4h7nzqn1SSbliSKbNQdc1dRDW6S9dyf5gR6rYb\n46NiX7+PUfJvFVBia3iWCP+jwf0UtIbAf8f0rs3lSQKBgQDSe8kHrEjwW28F1V2o\nfp6bpdS7CxoOfbAWyueMsSYT99U36+AV0yz9IGwdoeACAi7l9qXS37kc25zzlnjO\nchUoxCCSOmHu3Ivimltc7zQQiA1pqPV8BtXK50R9xGslrBv/B0B8NPViyrq+wxs3\nnsA5YD8t77++IxYQIvb0Xbc9yQKBgQDHQs0GA9JltUCEQMefhtQSzN3IQSVtRIcL\nsQctP2dsr6J2ONT+eW5/XzMPhIX7WUQaAv/n8n2KYiN2PgC/GoJpTv4elWhQeTZp\nFT1s1Y/pDbsM411cqm/1+jpSg+4f0KbwXKd6cr4Eu8JUZ4uqnCsxM+KNGvTbiFST\ntUQaQ9eULwKBgA8jzD/7CnwPd5rp0ATQpsP3V6fkkok8TTA2hBVAoMaK6xFMrB+l\nwvSqIly3Sg+a7Jip9x+F7CDBQzbaOfJPjmoSQW2DOYwe3Qj9pVi38/zEbIKPHqk/\nLJ2dqPWK7VIWYSUk9mR4wrXKc0hJbGnBx33ZCHJbbmVUzL94ZF8LZqTRAoGAbNUU\njCt8OCcGRPXo0j3fCSGyJNVILuUV6ZHYPKN7xsYrMu0ZkKAcdR83EUutrjn0U0y+\nHx636ORvP/7fg4FkJ0aIz4WFQybhTAXY1d/TSVRBjOmGLb29hxkTz8vVPLVG6NOC\negO/u3Ad1OH1S8seYDJZk/5cLKfKoh6IQtw5G+sCgYA+lcKV7FK8606LGjPpWnZA\n2X3Zzgx4hay/BVWgTwos3i+XCKefV8/BGBXkLZh0tNsRSEZCsyC4Fgfzr4oSGVAK\nwk8MIFWWTXymkJfYpN7Y9oSYVVxjq1x+j8PaaLN76CMvVJDj3/nAQSMUjzfHbYkh\nXDdLwRIfDiru8ebhPQk1HQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-85mc5@cocoontechlab.iam.gserviceaccount.com",
+  "client_id": "116439629724604414442",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-85mc5%40cocoontechlab.iam.gserviceaccount.com"
+}

@@ -1,54 +1,79 @@
 const functions = require('firebase-functions');
 
 const { db } = require('./util/admin');
+var admin = require('firebase-admin');
+
+const config = require('./util/config');
+
+const firebase = require('firebase');
+firebase.initializeApp(config);
 
 //import routes
-const {
-  getAllPlaces,
-  postOnePlace,
-  uploadPlaceImage,
-  getPlace,
-  commentOnPlace,
-  getOneComment,
-  // updateComment,
-  likePlace,
-  unlikePlace,
-  deletePlace,
-  unSavePlace,
-  savePlace,
-  reportOnPlace,
-} = require('./handlers/places');
-const {
-  signup,
-  login,
-  resetPassword,
-  uploadImage,
-  addUserDetails,
-  getAuthenticatedUser,
-  getUserDetails,
-  markNotificationsRead,
-} = require('./handlers/users');
+//places
+const { getAllPlaces } = require('./handlers/place/getAllPlaces');
+const { postOnePlace } = require('./handlers/place/postPlace');
+const { getPlace } = require('./handlers/place/getPlace');
+const { deletePlace } = require('./handlers/place/deletePlace');
 
-//import firebae auth
+//comments
+const { commentOnPlace } = require('./handlers/comment/postComment');
+
+//like
+const { likePlace } = require('./handlers/like/likePlace');
+const { unlikePlace } = require('./handlers/like/unlikePlace');
+
+//save
+const { savePlace } = require('./handlers/save/savePlace');
+const { unSavePlace } = require('./handlers/save/unSavePlace');
+
+//report
+const { reportOnPlace } = require('./handlers/report/reportOnPlace');
+
+//user detail from here
+//user create account login
+const { signup } = require('./handlers/user/signup');
+const { login } = require('./handlers/user/login');
+const { resetPassword } = require('./handlers/user/resetPassword');
+
+//user detail added
+const { uploadImage } = require('./handlers/user/uploadImage');
+const { addUserDetails } = require('./handlers/user/addUserDetails');
+
+//user data
+const {
+  getAuthenticatedUser,
+} = require('./handlers/user/getAuthenticatedUser');
+const { getUserDetails } = require('./handlers/user/getUserDetails');
+
+//notification
+const {
+  markNotificationsRead,
+} = require('./handlers/user/markNotificationsRead');
+
+//import firebase auth
 const FBAuth = require('./util/fbAuth');
 
 //express
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 
 // places routes
 app.get('/places', getAllPlaces);
 app.post('/place', FBAuth, postOnePlace);
-app.post('/place/:placeId/image', FBAuth, uploadPlaceImage);
+// app.post('/place/:placeId/image', FBAuth, uploadPlaceImage1);
+app.post('/place/placeimageupload', FBAuth, function (req, res) {
+  uploadPlaceImage;
+});
 app.get('/place/:placeId', getPlace);
 
 app.delete('/place/:placeId', FBAuth, deletePlace);
 app.get('/place/:placeId/like', FBAuth, likePlace);
 app.get('/place/:placeId/unlike', FBAuth, unlikePlace);
 app.post('/place/:placeId/comment', FBAuth, commentOnPlace);
-app.get('/place/:placeId/comment/:commentId', FBAuth, getOneComment);
+// app.get('/place/:placeId/comment/:commentId', FBAuth, getOneComment);
 // app.post('/place/:placeId/comment/:commentId', FBAuth, updateComment);
 app.get('/place/:placeId/save', FBAuth, savePlace);
 app.get('/place/:placeId/unsave', FBAuth, unSavePlace);
