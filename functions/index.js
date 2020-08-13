@@ -10,7 +10,12 @@ firebase.initializeApp(config);
 
 //import routes
 //places
-const { getAllPlaces } = require('./handlers/place/getAllPlaces');
+const {
+  getAllPlaces,
+  getRentalPlaces,
+  getSalePlaces,
+  getOtherPlaces,
+} = require('./handlers/place/getAllPlaces');
 const { postOnePlace } = require('./handlers/place/postPlace');
 const { getPlace } = require('./handlers/place/getPlace');
 const { deletePlace } = require('./handlers/place/deletePlace');
@@ -62,6 +67,9 @@ app.use(cors());
 
 // places routes
 app.get('/places', getAllPlaces);
+app.get('/rentalPlaces', getRentalPlaces);
+app.get('/salePlaces', getSalePlaces);
+app.get('/otherPlaces', getOtherPlaces);
 app.post('/place', FBAuth, postOnePlace);
 // app.post('/place/:placeId/image', FBAuth, uploadPlaceImage1);
 app.post('/place/placeimageupload', FBAuth, function (req, res) {

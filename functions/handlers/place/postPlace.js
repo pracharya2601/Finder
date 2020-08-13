@@ -19,7 +19,8 @@ exports.postOnePlace = (req, res) => {
   };
 
   db.collection('places')
-    .add(newPlace)
+    .doc(newPlace.placeId)
+    .set(newPlace)
     .then((doc) => {
       let resPlace = newPlace;
       resPlace.placeId = doc.id;

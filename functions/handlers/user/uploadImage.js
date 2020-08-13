@@ -16,7 +16,7 @@ exports.uploadImage = (req, res) => {
     if (
       mimetype !== 'image/jpeg' &&
       mimetype !== 'image/png' &&
-      mimetype !== image / HEIC
+      mimetype !== 'image/HEIC'
     ) {
       return res.status(400).json({ error: 'Wrong file submitted' });
     }
