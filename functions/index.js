@@ -17,6 +17,7 @@ const {
   getOtherPlaces,
 } = require('./handlers/place/getAllPlaces');
 const { postOnePlace } = require('./handlers/place/postPlace');
+const { updatePlace } = require('./handlers/place/updatePlace');
 const { getPlace } = require('./handlers/place/getPlace');
 const { deletePlace } = require('./handlers/place/deletePlace');
 
@@ -71,6 +72,7 @@ app.get('/rentalPlaces', getRentalPlaces);
 app.get('/salePlaces', getSalePlaces);
 app.get('/otherPlaces', getOtherPlaces);
 app.post('/place', FBAuth, postOnePlace);
+app.post('/place/:placeId/update', FBAuth, updatePlace);
 // app.post('/place/:placeId/image', FBAuth, uploadPlaceImage1);
 app.post('/place/placeimageupload', FBAuth, function (req, res) {
   uploadPlaceImage;
