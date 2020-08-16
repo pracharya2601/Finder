@@ -29,6 +29,7 @@ exports.getRentalPlaces = (req, res) => {
       return res.json(filteredPlaces);
     });
 };
+
 exports.getSalePlaces = (req, res) => {
   db.collection('places')
     .where('catagory', '==', 'sale')
