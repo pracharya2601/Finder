@@ -21,6 +21,10 @@ const { updatePlace } = require('./handlers/place/updatePlace');
 const { getPlace } = require('./handlers/place/getPlace');
 const { deletePlace } = require('./handlers/place/deletePlace');
 
+//markabailable and unavailable
+const { available } = require('./handlers/availablity/available');
+const { unavailable } = require('./handlers/availablity/unavailable');
+
 //comments
 const { commentOnPlace } = require('./handlers/comment/postComment');
 
@@ -73,15 +77,12 @@ app.get('/salePlaces', getSalePlaces);
 app.get('/otherPlaces', getOtherPlaces);
 app.post('/place', FBAuth, postOnePlace);
 app.post('/place/:placeId/update', FBAuth, updatePlace);
-// app.post('/place/:placeId/image', FBAuth, uploadPlaceImage1);
-app.post('/place/placeimageupload', FBAuth, function (req, res) {
-  uploadPlaceImage;
-});
-app.get('/place/:placeId', getPlace);
 
 app.delete('/place/:placeId', FBAuth, deletePlace);
 app.get('/place/:placeId/like', FBAuth, likePlace);
 app.get('/place/:placeId/unlike', FBAuth, unlikePlace);
+app.get('/place/:placeId/available', FBAuth, available);
+app.get('/place/:placeId/unavailable', FBAuth, unavailable);
 app.post('/place/:placeId/comment', FBAuth, commentOnPlace);
 // app.get('/place/:placeId/comment/:commentId', FBAuth, getOneComment);
 // app.post('/place/:placeId/comment/:commentId', FBAuth, updateComment);

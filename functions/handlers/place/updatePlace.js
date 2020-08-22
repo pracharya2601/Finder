@@ -6,17 +6,13 @@ exports.updatePlace = (req, res) => {
   }
   const placeData = req.body;
 
-  if (req.user.handle === placeData.userHandle) {
-    db.doc(`/places/${req.params.placeId}`)
-      .update(placeData)
-      .then(() => {
-        res.json(placeData);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: 'something went wrong' });
-        console.error(err);
-      });
-  } else {
-    res.status(401).json({ error: 'Not authorize' });
-  }
+  db.doc(`/places/${req.params.placeId}`)
+    .update(placeData)
+    .then(() => {
+      res.json(placeData);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'something went wrong' });
+      console.error(err);
+    });
 };
