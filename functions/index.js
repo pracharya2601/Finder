@@ -76,6 +76,7 @@ app.get('/rentalPlaces', getRentalPlaces);
 app.get('/salePlaces', getSalePlaces);
 app.get('/otherPlaces', getOtherPlaces);
 app.post('/place', FBAuth, postOnePlace);
+app.get('/place/:placeId', getPlace);
 app.post('/place/:placeId/update', FBAuth, updatePlace);
 
 app.delete('/place/:placeId', FBAuth, deletePlace);
