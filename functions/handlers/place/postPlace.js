@@ -8,6 +8,7 @@ exports.postOnePlace = (req, res) => {
 
   const newPlace = {
     ...placeData,
+    available: true,
     userHandle: req.user.handle,
     userImage: req.user.imageUrl,
     createdAt: new Date().toISOString(),

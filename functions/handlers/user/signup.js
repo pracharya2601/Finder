@@ -42,6 +42,7 @@ exports.signup = (req, res) => {
         age: newUser.age,
         contactNo: newUser.contactNo,
         savedCount: newUser.savedCount,
+        language: '',
         createdAt: new Date().toISOString(),
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
         userId,

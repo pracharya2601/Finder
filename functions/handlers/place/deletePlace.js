@@ -1,4 +1,4 @@
-const { db } = require('../../util/admin');
+const { admin, db } = require('../../util/admin');
 
 exports.deletePlace = (req, res) => {
   const document = db.doc(`/places/${req.params.placeId}`);

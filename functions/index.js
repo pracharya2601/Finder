@@ -60,6 +60,9 @@ const {
   markNotificationsRead,
 } = require('./handlers/user/markNotificationsRead');
 
+//mail
+const { sendMessage } = require('./handlers/user/sendMessage');
+
 //import firebase auth
 const FBAuth = require('./util/fbAuth');
 
@@ -90,6 +93,8 @@ app.post('/place/:placeId/comment', FBAuth, commentOnPlace);
 app.get('/place/:placeId/save', FBAuth, savePlace);
 app.get('/place/:placeId/unsave', FBAuth, unSavePlace);
 app.post('/place/:placeId/report', FBAuth, reportOnPlace);
+
+app.post('/mail', FBAuth, sendMessage);
 
 //user routes
 app.post('/signup', signup);
